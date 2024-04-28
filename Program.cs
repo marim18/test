@@ -42,27 +42,84 @@ namespace fitnessgame
             PinButtonPair greenpair = new PinButtonPair(greenPin, greenButton);
             PinButtonPair[] ListofPairs = new PinButtonPair[4]{ Redpair,Bluepair,yellowpair,greenpair};
 
-
             while (true)
             {
-                foreach(PinButtonPair pair in ListofPairs){
-                    if( pair.Button.Read() == PinValue.Low)
+                GpioPin[] newsequence = Sequence(ListofPairs);
+                inputmode(newsequence);
+            }
+            GpioPin[] Sequence(PinButtonPair[] pinButtonPairs)
+            {
+                int[] sequence = new int[pinButtonPairs.Length];
+                GpioPin[] Randomsequence = new GpioPin[pinButtonPairs.Length];
+                Random rand = new Random();
+
+                // Generate a random sequence
+                for (int i = 0; i < sequence.Length; i++)
+                {
+                    sequence[i] = rand.Next(sequence.Length);
+                }
+
+                // Play the sequence
+                foreach (int index in sequence)
+                {
+                    pinButtonPairs[index].Pin.Write(PinValue.High);
+                    Thread.Sleep(500); // Wait for half a second
+                    Randomsequence[index] = pinButtonPairs[index].Pin;
+                    pinButtonPairs[index].Pin.Write(PinValue.Low);
+                    Thread.Sleep(200); // Wait for 200 milliseconds between LEDs
+                }
+                return Randomsequence;//needs to return gpio[] for compare function
+            }
+            void inputmode(GpioPin[] sequence)
+            {
+                Console.WriteLine("game start");
+                bool playing = true;
+                while (playing)
+                {
+                    GpioPin[]sequencelist = new GpioPin[4];
+                    for (int i = 0; i < sequence.Length; )
                     {
-                        pair.Pin.Toggle();
-                        Thread.Sleep(123);
+                        foreach (PinButtonPair pair in ListofPairs)
+                        {
+                            if (pair.Button.Read() == PinValue.Low)
+                            {
+                                pair.Pin.Toggle();
+                                sequencelist[i] = pair.Pin;
+                                Thread.Sleep(123);
+                                i++;
+                            }
+                            else
+                            {
+                                pair.Pin.Write(PinValue.Low);
+                            }
+
+                        }
                     }
-                    else
+                    for (int i = 0; i < sequence.Length;)
                     {
-                        pair.Pin.Write(PinValue.Low);
-                    }
+                        if (i == sequence.Length-1 && sequence[i] == sequencelist[i])
+                        {
+                            Console.WriteLine("You win");
+                            playing = false;
+                        }
+                        else if(i != sequence.Length && sequence[i] == sequencelist[i])
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("you lose");
+                            playing = false;
+                            break;
+                            
+                        }
+                    };
+                    
 
                 }
-              
-                
-               
-
             }
 
         }
+       
     }
 }
