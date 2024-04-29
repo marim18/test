@@ -2,6 +2,7 @@ using System.Device.Gpio;
 using System;
 using System.Threading;
 using System.Diagnostics;
+using System.Collections;
 
 namespace fitnessgame
 {
@@ -14,11 +15,13 @@ namespace fitnessgame
         {
             public GpioPin Pin { get; set; }
             public GpioPin Button { get; set; }
+            public string Color { get; set; }
 
-            public PinButtonPair(GpioPin pin, GpioPin button)
+            public PinButtonPair(GpioPin pin, GpioPin button,string color)
             {
                 Pin = pin;
                 Button = button;
+                Color = color;
             }
         }
         public static void Main()
@@ -32,10 +35,10 @@ namespace fitnessgame
             GpioPin yellowButton = s_GpioController.OpenPin(27, PinMode.InputPullUp);
             GpioPin greenPin = s_GpioController.OpenPin(25, PinMode.Output);
             GpioPin greenButton = s_GpioController.OpenPin(33, PinMode.InputPullUp);
-            PinButtonPair Redpair = new PinButtonPair(redpin, redButton);
-            PinButtonPair Bluepair = new PinButtonPair(BluePin, BlueButton);
-            PinButtonPair yellowpair = new PinButtonPair(yellowPin, yellowButton);
-            PinButtonPair greenpair = new PinButtonPair(greenPin, greenButton);
+            PinButtonPair Redpair = new PinButtonPair(redpin, redButton,"red");
+            PinButtonPair Bluepair = new PinButtonPair(BluePin, BlueButton,"blue");
+            PinButtonPair yellowpair = new PinButtonPair(yellowPin, yellowButton,"yellow");
+            PinButtonPair greenpair = new PinButtonPair(greenPin, greenButton,"green");
             PinButtonPair[] ListofPairs = new PinButtonPair[4] { Redpair, Bluepair, yellowpair, greenpair };
 
             while (true)
@@ -72,7 +75,8 @@ namespace fitnessgame
                 
                 for (int i = 0; i < sequence.Length; i++)
                 {
-                    pinButtonPairs[sequence[i]].Pin.Write(PinValue.High); 
+                    pinButtonPairs[sequence[i]].Pin.Write(PinValue.High);
+                    Console.WriteLine(pinButtonPairs[sequence[i]].Color+ "was lit");
                     Thread.Sleep(500);
                     Randomsequence[i] = pinButtonPairs[sequence[i]].Pin;
                     pinButtonPairs[sequence[i]].Pin.Write(PinValue.Low);  
@@ -111,6 +115,7 @@ namespace fitnessgame
                                 {
 
                                     pair.Pin.Write(PinValue.High);
+                                    Console.WriteLine(pair.Color + "Was pressed");
                                     sequencelist[i] = pair.Pin;
                                     Thread.Sleep(100);
                                     pair.Pin.Write(PinValue.Low);
