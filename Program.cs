@@ -9,9 +9,7 @@ namespace fitnessgame
     public class Program
     {
         public static GpioController s_GpioController;
-        private static int[] sequence;
-        private static Timer timer;
-        private static int elapsedTime;
+
         public class PinButtonPair
         {
             public GpioPin Pin { get; set; }
@@ -28,8 +26,6 @@ namespace fitnessgame
             s_GpioController = new GpioController();
             GpioPin BluePin = s_GpioController.OpenPin(13, PinMode.Output);
             GpioPin BlueButton = s_GpioController.OpenPin(14, PinMode.InputPullUp);
-            // GpioPin examplePin = s_GpioController.OpenPin(13, PinMode.Output);
-            //GpioPin exampleButton = s_GpioController.OpenPin(14, PinMode.InputPullUp);
             GpioPin redpin = s_GpioController.OpenPin(32, PinMode.Output);
             GpioPin redButton = s_GpioController.OpenPin(16, PinMode.InputPullUp);
             GpioPin yellowPin = s_GpioController.OpenPin(26, PinMode.Output);
@@ -66,24 +62,24 @@ namespace fitnessgame
                 GpioPin[] Randomsequence = new GpioPin[pinButtonPairs.Length];
                 Random rand = new Random();
 
-                // Generate a random sequence
+     
                 for (int i = 0; i < sequence.Length; i++)
                 {
                     sequence[i] = rand.Next(sequence.Length);
                 }
 
-                // Play the sequence
+             
                 
                 for (int i = 0; i < sequence.Length; i++)
                 {
-                    pinButtonPairs[sequence[i]].Pin.Write(PinValue.High); // Light up the LED
-                    Thread.Sleep(500); // Wait for half a second
-                    Randomsequence[i] = pinButtonPairs[sequence[i]].Pin; // Save the pin for later comparison
-                    pinButtonPairs[sequence[i]].Pin.Write(PinValue.Low);  // Turn of the LED
-                    Thread.Sleep(200); // Wait for 200 milliseconds between LEDs
+                    pinButtonPairs[sequence[i]].Pin.Write(PinValue.High); 
+                    Thread.Sleep(500);
+                    Randomsequence[i] = pinButtonPairs[sequence[i]].Pin;
+                    pinButtonPairs[sequence[i]].Pin.Write(PinValue.Low);  
+                    Thread.Sleep(200); 
                 }
                 
-                return Randomsequence; //needs to return gpio[] for compare function
+                return Randomsequence; 
             }
              bool winnerchecker(GpioPin[] sequence, GpioPin[] sequencelist)
             {
