@@ -17,3 +17,8 @@ Previously we attempted to split the displaying of the randomsequence from the g
  We also tried moving everything out of main but it caused null pointer errors and alot of pain so it was moved back because of time constraint. 
 If we had more time we would improve the code so that it follows conventions better and was less functions inside function. 
 However it is now working as intended and has been tested. The test data we have each made programs to get.
+
+But make no mistake! THIS IS THE PROJECT WE DELIVER:
+https://github.com/marim18/test
+Not the other one!
+Pls be leanient if any of our teamamtes delivered the wrong file because of my naming habits. 
